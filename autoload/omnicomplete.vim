@@ -17,6 +17,13 @@ function! omnicomplete#vim_complete(findstart, base) abort
     endif
     return ret
   else
-    return necovim#gather_candidates(line_prefix . a:base, a:base)
+    let candidates = necovim#gather_candidates(line_prefix . a:base, a:base)
+    let filtered_candidates = []
+    for candidate in candidates
+      if candidate.word =~? '^' . a:base
+        call add(filtered_candidates, candidate)
+      endif
+    endfor
+    return filtered_candidates
   endif
 endfunction
