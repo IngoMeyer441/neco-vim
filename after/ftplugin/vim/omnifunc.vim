@@ -1,0 +1,1 @@
+setlocal omnifunc=omnicomplete#vim_complete
