@@ -62,14 +62,13 @@ function! necovim#helper#command(cur_text, complete_str) abort
       try
         let list += s:make_completion_list(
               \ getcompletion(a:cur_text, 'cmdline'))
-        let list = s:uniq_by(list, 'v:val.word')
       catch
         " Ignore getcompletion() error
       endtry
     endif
   endif
 
-  return list
+  return s:uniq_by(list, 'v:val.word')
 endfunction
 function! necovim#helper#environment(cur_text, complete_str) abort
   " Make cache.
@@ -398,7 +397,9 @@ function! s:make_cache_autocmds() abort
 endfunction
 
 function! s:get_cmdlist() abort
-  let list = exists('*getcompletion') ?
+  let list = exists('*nvim_get_commands') ?
+        \ keys(nvim_get_commands({'builtin': v:false})) :
+        \ exists('*getcompletion') ?
         \ getcompletion('', 'command') :
         \ split(s:redir('command'), '\n')[1:]
   return s:make_completion_list(list)
